@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    depends_on:
+      database:
+        condition: service_started
+    container_name: "api"
+    restart: always
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+      - database
+    links:
+      - database
+    env_file:
+      - .env
+    environment:
+      - DEBUG=${DEBUG}
+      - APP_NAME=${APP_NAME}
+      - DESCRIPTION=${DESCRIPTION}
+      - VERSION=${VERSION}
+      - SECRET_KEY=${SECRET_KEY}
+
+      - DATABASE_DRIVER=${DATABASE_DRIVER}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_DATABASE=${DATABASE_DATABASE}
+
+      - TOKEN_ALGORITHM=${TOKEN_ALGORITHM}
+    volumes:
+      - ./:/src/app
+
+  database:
+    image: "postgres:14.3-alpine"
+    container_name: "postgres"
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_DATABASE}
+    expose:
+      - 5432
+    networks:
+      - database  
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d/
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: "pgadmin"
+    restart: always
+    ports:
+      - "5050:80"
+    networks:
+      - database
+    links:
+      - database
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+
+networks:
+  database:
+    driver: bridge
+  backend:
+    driver: bridge
