@@ -1,0 +1,9 @@
+- Para levantar el servicio de la api se debe tener docker y docker compose o python 3.10.6 y postgres
+
+- Se debe duplicar el archivo .env.example y nombrarlo .env
+
+- Llenar las variables que esten vacias
+
+- Correr el comando
+
+> docker-compose up -d
