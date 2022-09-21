@@ -23,6 +23,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     await Tortoise.init(config=TORTOISE_ORM)
+    await Tortoise.generate_schemas()
     
 
 @app.on_event("shutdown")
