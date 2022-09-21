@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     VERSION: str
     SECRET_KEY: str
 
+    DATABASE_URL: str
     DATABASE_DRIVER: str
     DATABASE_USER: str
     DATABASE_PASSWORD: str
@@ -41,7 +42,7 @@ TORTOISE_ORM = {
             'engine': 'tortoise.backends.asyncpg',
             'credentials': {
                 'database': settings.DATABASE_DATABASE,
-                'host': 'database',
+                'host': settings.DATABASE_URL,
                 'password': settings.DATABASE_PASSWORD,
                 'port': settings.DATABASE_PORT,
                 'user': settings.DATABASE_USER,
